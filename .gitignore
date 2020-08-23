@@ -1,2 +1,3 @@
-
 pyenv/
+FlaskWebApp/app.db
+__pycache__
