@@ -18,6 +18,9 @@ class Rest_AllNames(Resource):
 
 
 class Rest_Name(Resource):
-    def put(self, name: str, address: str):
+    def post(self, name: str, address: str):
         Names.new_Names(name, address)
         return "success"
+
+    def put(self, *args, **kwargs):
+        self.post(*args, **kwargs)
