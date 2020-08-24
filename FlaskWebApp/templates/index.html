@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src=https://code.jquery.com/jquery-3.5.1.min.js></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div>
+        <h2>Basic Table</h2>
+        <p>A Table of names and addresses:</p>
+        <div>
+            <table id="nameTable" class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Address</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+<script>
+    function createNameTable(data) {
+        data = JSON.parse(data)
+        for (var i = 0; i < data.length; i++) {
+            var newRow = "<tr><td>" + data[i][0] + "</td><td>" + data[i][1] + "</td></tr>";
+            $("#nameTable > tbody:last-child").append(newRow);
+        };
+    };
+    jQuery.getJSON("http://localhost:5000/name", createNameTable);
+</script>
+
+</html>
