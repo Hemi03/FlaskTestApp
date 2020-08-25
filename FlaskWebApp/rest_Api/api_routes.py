@@ -1,4 +1,4 @@
-from flask_restful import Resource
+from flask_restful import Resource, reqparse
 from json import dumps
 
 from ..db_Model import DB
@@ -18,9 +18,20 @@ class Rest_AllNames(Resource):
 
 
 class Rest_Name(Resource):
-    def post(self, name: str, address: str):
-        Names.new_Names(name, address)
-        return "success"
+    parser = reqparse.RequestParser()
+    parser.add_argument('Address', type=str, required=True)
+
+    def get(self, name: str):
+        output = Names.query.get(name)
+        if not output:
+            return "Cant find Name", 404
+        return dumps([output.Name, output.Address])
+
+    def post(self, name: str):
+        args = self.parser.parse_args()
+        address = str(args['Address'])
+        output = Names.new_Names(name, address)
+        return output.toJson()
 
     def put(self, *args, **kwargs):
-        self.post(*args, **kwargs)
+        return self.post(*args, **kwargs)

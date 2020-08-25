@@ -1,3 +1,5 @@
+from json import dumps
+
 from sqlalchemy import Column, Integer, String
 
 from ..db_Model import DB
@@ -6,6 +8,9 @@ from ..db_Model import DB
 class Names(DB.Model):
     Name = Column(String, primary_key=True)
     Address = Column(String, nullable=False)
+
+    def toJson(self):
+        return dumps((self.Name, self.Address))
 
     @classmethod
     def new_Names(cli, name: str, address: str):
