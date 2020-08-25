@@ -34,7 +34,7 @@
     </div>
 
     <!-- Modal to add new Name -->
-    <div class="modal fade" id="addNewName" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="addNewName" tabindex="-1" role="dialog" aria-labelledby="newNameModal"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -64,6 +64,35 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="infoName" tabindex="-1" role="dialog" aria-labelledby="infoNameModal"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="infoNameTitle"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Name:</label>
+                            <input type="text" class="form-control" id="nameInput">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Address:</label>
+                            <input class="form-control" id="addressInput"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Send message</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 <script>
@@ -71,7 +100,8 @@
         data = JSON.parse(data);
         $("#nameTable > tbody").empty();
         for (var i = 0; i < data.length; i++) {
-            var newRow = "<tr><td>" + data[i][0] + "</td><td>" + data[i][1] + "</td></tr>";
+            var newRow = '<tr data-toggle="modal" data-target="#infoName" data-idname="' + data[i][0] + '">';
+            newRow += '<td>' + data[i][0] + "</td><td>" + data[i][1] + "</td></tr>";
             $("#nameTable > tbody:last-child").append(newRow);
         };
     };
@@ -82,8 +112,19 @@
         $("#newAddressInput").val("");
         console.log(newName);
         console.log(newAddress);
-        jQuery.post("/name/" + newName + "/" + newAddress)
+        jQuery.post("/name/" + newName + "/" + newAddress);
     };
+    function infoModalFilling(data) {
+        data = JSON.parse(data);
+        $("#nameInput").val(data[0])
+        $("#addressInput").val(data[1])
+    }
+    $('#infoName').on('show.bs.modal', function (event) {
+        var name = JSON.parse($(event.relatedTarget).data("idname"));
+        var modal = $(this);
+        modal.find(".modal-title").text("Info of " + name);
+        JSON.getJSON("/name/" + name, infoModalFilling);
+    });
     jQuery.getJSON("/name", fillNameTable);
 </script>
 
