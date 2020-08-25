@@ -12,6 +12,10 @@ class Names(DB.Model):
     def toJson(self):
         return dumps((self.Name, self.Address))
 
+    def delete(self):
+        DB.session.delete(self)
+        DB.session.commit()
+
     @classmethod
     def new_Names(cli, name: str, address: str):
         output = cli(Name=name, Address=address)
