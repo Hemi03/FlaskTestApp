@@ -1,10 +1,9 @@
-from flask_restful import Resource, reqparse
 from json import dumps
+
+from flask_restful import Resource, reqparse
 
 from ..db_Model import DB
 from ..db_Model.models import Names
-
-TEST_DATA = ["test1", "test2"]
 
 
 class Rest_AllNames(Resource):
@@ -35,3 +34,9 @@ class Rest_Name(Resource):
 
     def put(self, *args, **kwargs):
         return self.post(*args, **kwargs)
+
+    def delete(self, name: str):
+        target = Names.query.get(name)
+        if not target:
+            return "Cant find Name", 404
+        target.delete()
