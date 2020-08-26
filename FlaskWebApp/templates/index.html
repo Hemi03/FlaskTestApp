@@ -87,20 +87,43 @@
                     </form>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-danger mr-auto" data-dismiss="modal" data-toggle="modal"
+                        data-target="#confirmDeleteName">Delete</button>
+                    <button type="button" class="btn btn-primary mr-4">Update Name</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Send message</button>
                 </div>
             </div>
         </div>
     </div>
-
+    <div class="modal fade" id="confirmDeleteName" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Realy?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Do you want to delete this Name?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning" data-dismiss="modal" onclick="deleteName()">
+                        Yes Delete
+                    </button>
+                    <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+
 <script>
     function fillNameTable(data) {
         data = JSON.parse(data);
         $("#nameTable > tbody").empty();
         for (var i = 0; i < data.length; i++) {
-            var newRow = '<tr data-toggle="modal" data-target="#infoName" data-idname="' + data[i][0] + '">';
+            var newRow = '<tr data-toggle="modal" data-target="#infoName" data-name="' + data[i][0] + '">';
             newRow += '<td>' + data[i][0] + "</td><td>" + data[i][1] + "</td></tr>";
             $("#nameTable > tbody:last-child").append(newRow);
         };
@@ -110,20 +133,25 @@
         var newAddress = $("#newAddressInput").val();
         $("#newNameInput").val("");
         $("#newAddressInput").val("");
-        console.log(newName);
-        console.log(newAddress);
-        jQuery.post("/name/" + newName + "/" + newAddress);
+        jQuery.post({ url: "/name/" + newName, data: { Address: newAddress } });
+        jQuery.ajax({ url: "/name", success: fillNameTable });
     };
+    function deleteName() {
+        var name = $("#nameInput").val()
+        // TODO: handle error
+        jQuery.ajax({ url: "/name/" + name, type: "DELETE" });
+        jQuery.ajax({ url: "/name", success: fillNameTable });
+    }
     function infoModalFilling(data) {
         data = JSON.parse(data);
         $("#nameInput").val(data[0])
         $("#addressInput").val(data[1])
     }
     $('#infoName').on('show.bs.modal', function (event) {
-        var name = JSON.parse($(event.relatedTarget).data("idname"));
+        var name = $(event.relatedTarget).data("name");
         var modal = $(this);
-        modal.find(".modal-title").text("Info of " + name);
-        JSON.getJSON("/name/" + name, infoModalFilling);
+        modal.find(".modal-title").text("Info for: " + name);
+        jQuery.getJSON("/name/" + name, infoModalFilling);
     });
     jQuery.getJSON("/name", fillNameTable);
 </script>
