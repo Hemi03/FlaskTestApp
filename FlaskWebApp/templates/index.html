@@ -52,7 +52,7 @@
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Address:</label>
-                            <input class="form-control" id="newAddressInput"></textarea>
+                            <input type="text" class="form-control" id="newAddressInput">
                         </div>
                     </form>
                 </div>
@@ -64,6 +64,7 @@
             </div>
         </div>
     </div>
+    <!-- Modal for Info to Name -->
     <div class="modal fade" id="infoName" tabindex="-1" role="dialog" aria-labelledby="infoNameModal"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -78,11 +79,11 @@
                     <form>
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Name:</label>
-                            <input type="text" class="form-control" id="nameInput">
+                            <input type="text" class="form-control" id="nameInput" readonly>
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="col-form-label">Address:</label>
-                            <input class="form-control" id="addressInput"></textarea>
+                            <input type="text" class="form-control" id="addressInput">
                         </div>
                     </form>
                 </div>
@@ -95,6 +96,7 @@
             </div>
         </div>
     </div>
+    <!-- Confirmation Modal for deletion of Name -->
     <div class="modal fade" id="confirmDeleteName" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -131,6 +133,9 @@
     function newName() {
         var newName = $("#newNameInput").val();
         var newAddress = $("#newAddressInput").val();
+        if (newName === "") {
+
+        }
         $("#newNameInput").val("");
         $("#newAddressInput").val("");
         jQuery.post({ url: "/name/" + newName, data: { Address: newAddress } });
@@ -153,6 +158,15 @@
         modal.find(".modal-title").text("Info for: " + name);
         jQuery.getJSON("/name/" + name, infoModalFilling);
     });
+    // Focus first input in addNewName Modal
+    $('#addNewName').on('shown.bs.modal', function () {
+        $('#newNameInput').focus();
+    });
+    // Focus first input in addNewName Modal
+    $('#infoName').on('shown.bs.modal', function () {
+        $('#nameInput').focus();
+    });
+    // Init the Name Table
     jQuery.getJSON("/name", fillNameTable);
 </script>
 
