@@ -5,7 +5,7 @@ ROUTES = Blueprint("routes", __name__)
 
 @ROUTES.route('/test', methods=['GET'])
 def test():
-    return 'it works!'
+    return render_template("test.html")
 
 
 @ROUTES.route('/', methods=['GET'])
