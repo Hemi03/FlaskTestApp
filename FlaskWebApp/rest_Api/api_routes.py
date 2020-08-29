@@ -29,7 +29,14 @@ class Rest_Name(Resource):
     def post(self, name: str):
         args = self.parser.parse_args()
         address = str(args['Address'])
-        output = Names.new_Names(name, address)
+        output = Names.query.get(name)
+        if not output:
+            output = Names.new_Names(name, address)
+        else:
+            if address == output.Address:
+                return "cant change Address", 403
+            output.Address = address
+            output.commit()
         return output.toJson()
 
     def put(self, *args, **kwargs):

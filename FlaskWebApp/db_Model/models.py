@@ -16,6 +16,9 @@ class Names(DB.Model):
         DB.session.delete(self)
         DB.session.commit()
 
+    def commit(self):
+        DB.session.commit()
+
     @classmethod
     def new_Names(cli, name: str, address: str):
         output = cli(Name=name, Address=address)
