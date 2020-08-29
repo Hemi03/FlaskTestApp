@@ -48,11 +48,19 @@
                     <form id="newNameForm" class="needs-validation" onsubmit="newName(); return false" novalidate>
                         <div class="form-group">
                             <label for="newNameInput" class="col-form-label">Name:</label>
-                            <input type="text" class="form-control" id="newNameInput" placeholder="Name" required>
+                            <input type="text" class="form-control" id="newNameInput" pattern="[A-Za-z]+"
+                                placeholder="add Name" required>
+                            <div class="invalid-feedback">
+                                Only Letters!
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="newAddressInput" class="col-form-label">Address:</label>
-                            <input type="text" class="form-control" id="newAddressInput" placeholder="Address" required>
+                            <input type="text" class="form-control" id="newAddressInput" pattern="[A-Za-z]+"
+                                placeholder="add Address" required>
+                            <div class="invalid-feedback">
+                                Only Letters!
+                            </div>
                         </div>
                         <div class="modal-footer form-group">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -76,8 +84,11 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form id="infoNameForm" class="needs-Validation" novalidate>
+                <form id="infoNameForm" class="needs-Validation" onsubmit="updateName() ; return false" novalidate>
                     <div class="modal-body">
+                        <div class="form-group alert alert-danger" id="changeErrorAlert" role="alert">
+                            Cant use this Address
+                        </div>
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Name:</label>
                             <input type="text" class="form-control" id="nameInput" readonly>
@@ -90,8 +101,8 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger mr-auto" data-dismiss="modal" data-toggle="modal"
                             data-target="#confirmDeleteName">Delete</button>
-                        <button type="button" class="btn btn-primary mr-4">Update Name</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary mr-4">Update Name</button>
+                        <button class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </form>
             </div>
@@ -109,9 +120,12 @@
                 </div>
                 <div class="modal-body">
                     <p>Do you want to delete this Name?</p>
+                    <div class="form-group alert alert-danger" id="deleteErrorAlert" role="alert">
+                        Cant delete this Name.
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-warning" data-dismiss="modal" onclick="deleteName()">
+                    <button type="button" class="btn btn-warning" onclick="deleteName()">
                         Yes Delete
                     </button>
                     <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
@@ -122,7 +136,7 @@
 </body>
 
 <script>
-    function fillNameTable() {
+    function updateNameTable() {
         jQuery.ajax({
             url: "/name", success: function (data) {
                 data = JSON.parse(data);
@@ -135,7 +149,7 @@
             }
         });
     };
-    $("#newNameInput").removeClass('success').addClass('error')
+    $("#newNameInput").removeClass('success').addClass('error');
     function newName() {
         var form = $("#newNameForm")[0];
         if (form.checkValidity() === false) {
@@ -145,13 +159,34 @@
         var newAddress = $("#newAddressInput").val();
         $("#newNameInput").val("");
         $("#newAddressInput").val("");
-        jQuery.ajax({ url: "/name/" + newName, type: "POST", data: { Address: newAddress }, complete: fillNameTable });
+        jQuery.ajax({ url: "/name/" + newName, type: "POST", data: { Address: newAddress }, complete: updateNameTable });
         $("#addNewName").modal("toggle");
+    };
+    function updateName() {
+        if ($("#infoNameForm")[0].checkValidity() === false) {
+            return;
+        };
+        var newName = $("#nameInput").val();
+        var newAddress = $("#addressInput").val();
+        jQuery.ajax({
+            url: "/name/" + newName, type: "POST", data: { Address: newAddress }, complete: updateNameTable, error: function (err) {
+                if (err.status === 403) {
+                    $("#changeErrorAlert").show();
+                }
+            }, success: function () {
+                $("#infoName").modal("toggle");
+            },
+        });
     };
     function deleteName() {
         var name = $("#nameInput").val();
-        // TODO: handle error
-        jQuery.ajax({ url: "/name/" + name, type: "DELETE", complete: fillNameTable });
+        jQuery.ajax({
+            url: "/name/" + name, type: "DELETE", complete: updateNameTable,
+            error: function (err) {
+                $("#deleteErrorAlert").show();
+            }
+        });
+        $("#confirmDeleteName").modal("toggle")
     }
     function infoModalFilling(data) {
         data = JSON.parse(data);
@@ -172,8 +207,16 @@
     $('#infoName').on('shown.bs.modal', function () {
         $('#nameInput').focus();
     });
+    $(".modal").on("hidden.bs.modal", function () {
+        $("#changeErrorAlert").hide();
+    });
+    $("#changeErrorAlert").hide();
+    $(".modal").on("hidden.bs.modal", function () {
+        $("#deleteErrorAlert").hide();
+    });
+    $("#deleteErrorAlert").hide();
     // Init the Name Table
-    fillNameTable();
+    updateNameTable();
     (function () {
         'use strict';
         window.addEventListener('load', function () {
