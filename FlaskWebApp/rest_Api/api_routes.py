@@ -1,6 +1,7 @@
 from json import dumps
 
 from flask_restful import Resource, reqparse
+import logging
 
 from ..db_Model import DB
 from ..db_Model.models import Names
@@ -30,6 +31,7 @@ class Rest_Name(Resource):
         try:
             args = self.parser.parse_args()
         except ValueError as err:
+            logging.exception(err)
             return "Broken Json Value", 400
         address = str(args['Address'])
         output = Names.query.get(name)
