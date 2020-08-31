@@ -58,3 +58,16 @@ def testPostName_changeName(test_client, init_database):
 def testPostName_notDataForChange(test_client, init_database):
     response = test_client.post("/name/Test2")
     assert response.status_code == 400
+
+
+def testPostName_brokenJson(test_client, init_database):
+    response = test_client.post("/name/Test3", json="{NONSENSE")
+    assert response.status_code == 400
+
+
+def testPutName(test_client, init_database):
+    target = ["Test3", "Address3"]
+    response = test_client.put("/name/Test3", json={"Address": "Address3"})
+    assert response.status_code == 200
+    assert loads(response.json) == target
+    assert Names.query.get("Test3").Address == "Address3"

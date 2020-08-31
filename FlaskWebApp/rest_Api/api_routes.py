@@ -27,7 +27,10 @@ class Rest_Name(Resource):
         return dumps([output.Name, output.Address])
 
     def post(self, name: str):
-        args = self.parser.parse_args()
+        try:
+            args = self.parser.parse_args()
+        except ValueError as err:
+            return "Broken Json Value", 400
         address = str(args['Address'])
         output = Names.query.get(name)
         if not output:

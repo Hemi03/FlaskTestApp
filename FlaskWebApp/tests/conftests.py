@@ -26,10 +26,3 @@ def init_database():
 
     DB.drop_all()
     DB.create_all()
-
-
-@pytest.fixture
-def database():
-    DB.create_all()
-    yield DB
-    DB.drop_all()
