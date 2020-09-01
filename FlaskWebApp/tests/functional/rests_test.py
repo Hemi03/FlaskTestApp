@@ -71,3 +71,20 @@ def testPutName(test_client, init_database):
     assert response.status_code == 200
     assert loads(response.json) == target
     assert Names.query.get("Test3").Address == "Address3"
+
+
+def testDeleteName(test_client, init_database):
+    response = test_client.delete("/name/Test1")
+    assert response.status_code == 200
+    assert response.json == True
+
+
+def testDeleteName_unknownName(test_client, init_database):
+    response = test_client.delete("/name/Test3")
+    assert response.status_code == 404
+    assert response.json == False
+
+
+def testDeleteName_noName(test_client, init_database):
+    response = test_client.delete("/name/Test3")
+    assert response.status_code == 404
