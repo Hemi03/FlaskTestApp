@@ -203,17 +203,21 @@
     $('#addNewName').on('shown.bs.modal', function () {
         $('#newNameInput').focus();
     });
+    $('#addNewName').on('hidden.bs.modal', function () {
+        $('#newNameForm').removeClass("was-validated");
+    });
     // Focus first input in addNewName Modal
     $('#infoName').on('shown.bs.modal', function () {
         $('#nameInput').focus();
     });
+    $('#infoName').on('hidden.bs.modal', function () {
+        $('#infoNameForm').removeClass("was-validated");
+    });
     $(".modal").on("hidden.bs.modal", function () {
         $("#changeErrorAlert").hide();
-    });
-    $("#changeErrorAlert").hide();
-    $(".modal").on("hidden.bs.modal", function () {
         $("#deleteErrorAlert").hide();
     });
+    $("#changeErrorAlert").hide();
     $("#deleteErrorAlert").hide();
     // Init the Name Table
     updateNameTable();
