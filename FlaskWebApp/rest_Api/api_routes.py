@@ -50,5 +50,6 @@ class Rest_Name(Resource):
     def delete(self, name: str):
         target = Names.query.get(name)
         if not target:
-            return "Cant find Name", 404
+            return False, 404
         target.delete()
+        return True
