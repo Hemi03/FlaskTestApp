@@ -8,6 +8,14 @@ from .templates import ROUTES
 
 
 def create_app(test_config: object = None):
+    """create the flask app and set it up
+
+    Args:
+        test_config (object, optional): a config the app can start with. Defaults to None.
+
+    Returns:
+        Flask: the freshly created app
+    """
     app = Flask(__name__)
     if not test_config:
         app.config.from_object(Config)
