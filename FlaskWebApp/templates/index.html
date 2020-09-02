@@ -16,13 +16,13 @@
 <body>
     <div class="p-3">
         <h2>Basic Table</h2>
-        <p class="px-1">A Table of names and addresses:</p>
+        <p class="px-1">A Table of names and Events:</p>
         <div class="mx-2">
             <table id="nameTable" class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Address</th>
+                        <th>Event</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -55,9 +55,9 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="newAddressInput" class="col-form-label">Address:</label>
-                            <input type="text" class="form-control" id="newAddressInput" pattern="[A-Za-z]+"
-                                placeholder="add Address" required>
+                            <label for="newEventInput" class="col-form-label">Event:</label>
+                            <input type="text" class="form-control" id="newEventInput" pattern="[A-Za-z]+"
+                                placeholder="add Event" required>
                             <div class="invalid-feedback">
                                 Only Letters!
                             </div>
@@ -87,15 +87,15 @@
                 <form id="infoNameForm" class="needs-Validation" onsubmit="updateName() ; return false" novalidate>
                     <div class="modal-body">
                         <div class="form-group alert alert-danger" id="changeErrorAlert" role="alert">
-                            Cant use this Address
+                            Cant use this Event
                         </div>
                         <div class="form-group">
                             <label for="recipient-name" class="col-form-label">Name:</label>
                             <input type="text" class="form-control" id="nameInput" readonly>
                         </div>
                         <div class="form-group">
-                            <label for="message-text" class="col-form-label">Address:</label>
-                            <input type="text" class="form-control" id="addressInput">
+                            <label for="message-text" class="col-form-label">Event:</label>
+                            <input type="text" class="form-control" id="eventInput">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -142,7 +142,7 @@
                 $("#nameTable > tbody").empty();
                 for (var i = 0; i < data.length; i++) {
                     var newRow = '<tr data-toggle="modal" data-target="#infoName" data-name="' + data[i]["Name"] + '">';
-                    newRow += '<td>' + data[i]["Name"] + "</td><td>" + data[i]["Address"] + "</td></tr>";
+                    newRow += '<td>' + data[i]["Name"] + "</td><td>" + data[i]["Event"] + "</td></tr>";
                     $("#nameTable > tbody:last-child").append(newRow);
                 };
             }
@@ -154,10 +154,10 @@
             return;
         };
         var newName = $("#newNameInput").val();
-        var newAddress = $("#newAddressInput").val();
+        var newEvent = $("#newEventInput").val();
         $("#newNameInput").val("");
-        $("#newAddressInput").val("");
-        jQuery.ajax({ url: "/name/" + newName, type: "POST", data: { Address: newAddress }, complete: updateNameTable });
+        $("#newEventInput").val("");
+        jQuery.ajax({ url: "/name/" + newName, type: "POST", data: { Event: newEvent }, complete: updateNameTable });
         $("#addNewName").modal("toggle");
     };
     function updateName() {
@@ -165,9 +165,9 @@
             return;
         };
         var newName = $("#nameInput").val();
-        var newAddress = $("#addressInput").val();
+        var newEvent = $("#eventInput").val();
         jQuery.ajax({
-            url: "/name/" + newName, type: "POST", data: { Address: newAddress }, complete: updateNameTable, error: function (err) {
+            url: "/name/" + newName, type: "POST", data: { Event: newEvent }, complete: updateNameTable, error: function (err) {
                 if (err.status === 403) {
                     $("#changeErrorAlert").show();
                 }
@@ -188,7 +188,7 @@
     }
     function infoModalFilling(data) {
         $("#nameInput").val(data["Name"])
-        $("#addressInput").val(data["Address"])
+        $("#eventInput").val(data["Event"])
     }
     $('#infoName').on('show.bs.modal', function (event) {
         var name = $(event.relatedTarget).data("name");

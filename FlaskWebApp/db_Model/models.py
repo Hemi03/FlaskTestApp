@@ -9,15 +9,15 @@ class Names(DB.Model):
     """Name Database Table
     """
     Name = Column(String(50), primary_key=True)
-    Address = Column(String, nullable=False)
+    Event = Column(String, nullable=False)
 
     def toJson(self):
-        """return the Object in Json Format {"Name": name, "Address": address}
+        """return the Object in Json Format {"Name": name, "Event": event}
 
         Returns:
             dict: the Name Object as a Dictionary
         """
-        return {"Name": self.Name, "Address": self.Address}
+        return {"Name": self.Name, "Event": self.Event}
 
     def delete(self):
         """delete yourself from the Database
@@ -31,17 +31,17 @@ class Names(DB.Model):
         DB.session.commit()
 
     @classmethod
-    def new_Names(cli, name: str, address: str):
+    def new_Names(cli, name: str, event: str):
         """create a new Name and add it to the Database
 
         Args:
             name (str): the Name of the new Object
-            address (str): The Address of the new Object
+            event (str): The Event of the new Object
 
         Returns:
             Name: the just created Name Object
         """
-        new = cli(Name=name, Address=address)
+        new = cli(Name=name, Event=event)
         DB.session.add(new)
         DB.session.commit()
         return new

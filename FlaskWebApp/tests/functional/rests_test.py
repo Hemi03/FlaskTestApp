@@ -5,8 +5,8 @@ from ...db_Model.models import Names
 
 
 def testAllName(test_client, init_database):
-    target = [{"Name": "Test1", "Address": "Address1"},
-              {"Name": "Test2", "Address": "Address2"}]
+    target = [{"Name": "Test1", "Event": "Event1"},
+              {"Name": "Test2", "Event": "Event2"}]
     response = test_client.get("/name")
     assert response.status_code == 200
     assert response.json == target
@@ -19,7 +19,7 @@ def testAllName_empty(test_client):
 
 
 def testGetName_Successfull(test_client, init_database):
-    target = {"Name": "Test1", "Address": "Address1"}
+    target = {"Name": "Test1", "Event": "Event1"}
     response = test_client.get("/name/Test1")
     assert response.status_code == 200
     assert response.json == target
@@ -36,11 +36,11 @@ def testGetName_unknownName(test_client, init_database):
 
 
 def testPostName(test_client, init_database):
-    target = {"Name": "Test3", "Address": "Address3"}
-    response = test_client.post("/name/Test3", json={"Address": "Address3"})
+    target = {"Name": "Test3", "Event": "Event3"}
+    response = test_client.post("/name/Test3", json={"Event": "Event3"})
     assert response.status_code == 200
     assert response.json == target
-    assert Names.query.get("Test3").Address == "Address3"
+    assert Names.query.get("Test3").Event == "Event3"
 
 
 def testPostName_noData(test_client, init_database):
@@ -49,11 +49,11 @@ def testPostName_noData(test_client, init_database):
 
 
 def testPostName_changeName(test_client, init_database):
-    target = {"Name": "Test2", "Address": "Address3"}
-    response = test_client.post("/name/Test2", json={"Address": "Address3"})
+    target = {"Name": "Test2", "Event": "Event3"}
+    response = test_client.post("/name/Test2", json={"Event": "Event3"})
     assert response.status_code == 200
     assert response.json == target
-    assert Names.query.get("Test2").Address == "Address3"
+    assert Names.query.get("Test2").Event == "Event3"
 
 
 def testPostName_notDataForChange(test_client, init_database):
@@ -67,11 +67,11 @@ def testPostName_brokenJson(test_client, init_database):
 
 
 def testPutName(test_client, init_database):
-    target = {"Name": "Test3", "Address": "Address3"}
-    response = test_client.put("/name/Test3", json={"Address": "Address3"})
+    target = {"Name": "Test3", "Event": "Event3"}
+    response = test_client.put("/name/Test3", json={"Event": "Event3"})
     assert response.status_code == 200
     assert response.json == target
-    assert Names.query.get("Test3").Address == "Address3"
+    assert Names.query.get("Test3").Event == "Event3"
 
 
 def testDeleteName(test_client, init_database):

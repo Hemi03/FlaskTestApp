@@ -19,8 +19,8 @@ def test_client():
 @pytest.fixture
 def init_database():
     # Insert user data
-    name1 = Names.new_Names("Test1", "Address1")
-    name2 = Names.new_Names("Test2", "Address2")
+    name1 = Names.new_Names("Test1", "Event1")
+    name2 = Names.new_Names("Test2", "Event2")
 
     yield DB  # this is where the testing happens!
 

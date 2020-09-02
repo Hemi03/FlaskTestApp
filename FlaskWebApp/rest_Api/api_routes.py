@@ -15,7 +15,7 @@ class Rest_AllNames(Resource):
         """return a List of all Names
 
         Returns:
-            list: a List of Names z.B. [{"Name": name, "Address": address}]
+            list: a List of Names z.B. [{"Name": name, "Event": event}]
         """
         names = Names.query.all()
         result = list()
@@ -28,7 +28,7 @@ class Rest_Name(Resource):
     """The Api for /name/[name]
     """
     parser = reqparse.RequestParser()
-    parser.add_argument('Address', type=str, required=True)
+    parser.add_argument('Event', type=str, required=True)
 
     def get(self, name: str):
         """return data for the given Name as Json
@@ -58,14 +58,14 @@ class Rest_Name(Resource):
         except ValueError as err:
             logging.exception(err)
             return "Broken Json Value", 400
-        address = str(args['Address'])
+        event = str(args['Event'])
         output = Names.query.get(name)
         if not output:
-            output = Names.new_Names(name, address)
+            output = Names.new_Names(name, event)
         else:
-            if address == output.Address:
-                return "cant change Address", 403
-            output.Address = address
+            if event == output.Event:
+                return "cant change Event", 403
+            output.Event = event
             output.commit()
         return output.toJson()
 
