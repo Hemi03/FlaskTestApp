@@ -139,17 +139,15 @@
     function updateNameTable() {
         jQuery.ajax({
             url: "/name", success: function (data) {
-                data = JSON.parse(data);
                 $("#nameTable > tbody").empty();
                 for (var i = 0; i < data.length; i++) {
-                    var newRow = '<tr data-toggle="modal" data-target="#infoName" data-name="' + data[i][0] + '">';
-                    newRow += '<td>' + data[i][0] + "</td><td>" + data[i][1] + "</td></tr>";
+                    var newRow = '<tr data-toggle="modal" data-target="#infoName" data-name="' + data[i]["Name"] + '">';
+                    newRow += '<td>' + data[i]["Name"] + "</td><td>" + data[i]["Address"] + "</td></tr>";
                     $("#nameTable > tbody:last-child").append(newRow);
                 };
             }
         });
     };
-    $("#newNameInput").removeClass('success').addClass('error');
     function newName() {
         var form = $("#newNameForm")[0];
         if (form.checkValidity() === false) {
@@ -189,9 +187,8 @@
         $("#confirmDeleteName").modal("toggle")
     }
     function infoModalFilling(data) {
-        data = JSON.parse(data);
-        $("#nameInput").val(data[0])
-        $("#addressInput").val(data[1])
+        $("#nameInput").val(data["Name"])
+        $("#addressInput").val(data["Address"])
     }
     $('#infoName').on('show.bs.modal', function (event) {
         var name = $(event.relatedTarget).data("name");
@@ -199,24 +196,26 @@
         modal.find(".modal-title").text("Info for: " + name);
         jQuery.getJSON("/name/" + name, infoModalFilling);
     });
-    // Focus first input in addNewName Modal
+    // Focus first input in addNewName Modal and clear validation
     $('#addNewName').on('shown.bs.modal', function () {
         $('#newNameInput').focus();
     });
     $('#addNewName').on('hidden.bs.modal', function () {
         $('#newNameForm').removeClass("was-validated");
     });
-    // Focus first input in addNewName Modal
+    // Focus first input in infoName Modal and clear validation
     $('#infoName').on('shown.bs.modal', function () {
         $('#nameInput').focus();
     });
     $('#infoName').on('hidden.bs.modal', function () {
         $('#infoNameForm').removeClass("was-validated");
     });
+    // hide the Alerts in the Modals on closing
     $(".modal").on("hidden.bs.modal", function () {
         $("#changeErrorAlert").hide();
         $("#deleteErrorAlert").hide();
     });
+    // hide the Alerts on loading
     $("#changeErrorAlert").hide();
     $("#deleteErrorAlert").hide();
     // Init the Name Table

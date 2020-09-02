@@ -13,8 +13,8 @@ class Rest_AllNames(Resource):
         names = Names.query.all()
         result = list()
         for i in names:
-            result.append((i.Name, i.Address))
-        return dumps(result)
+            result.append(i.toJson())
+        return result
 
 
 class Rest_Name(Resource):
@@ -25,7 +25,7 @@ class Rest_Name(Resource):
         output = Names.query.get(name)
         if not output:
             return "Cant find Name", 404
-        return dumps([output.Name, output.Address])
+        return output.toJson()
 
     def post(self, name: str):
         try:

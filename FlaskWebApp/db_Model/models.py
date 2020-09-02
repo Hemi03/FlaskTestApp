@@ -6,11 +6,11 @@ from ..db_Model import DB
 
 
 class Names(DB.Model):
-    Name = Column(String, primary_key=True)
+    Name = Column(String(50), primary_key=True)
     Address = Column(String, nullable=False)
 
     def toJson(self):
-        return dumps((self.Name, self.Address))
+        return {"Name": self.Name, "Address": self.Address}
 
     def delete(self):
         DB.session.delete(self)
@@ -21,8 +21,8 @@ class Names(DB.Model):
 
     @classmethod
     def new_Names(cli, name: str, address: str):
-        output = cli(Name=name, Address=address)
-        DB.session.add(output)
+        new = cli(Name=name, Address=address)
+        DB.session.add(new)
         DB.session.commit()
         return new
 

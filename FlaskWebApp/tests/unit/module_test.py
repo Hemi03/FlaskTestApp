@@ -25,7 +25,7 @@ def testDeleteName(mock_commit, mock_delete):
 
 
 def testToJson():
-    target = ["test", "address"]
+    target = {"Name": "test", "Address": "address"}
     name = Names(Name="test", Address="address")
     result = name.toJson()
-    assert loads(result) == target
+    assert result == target
