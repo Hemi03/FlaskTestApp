@@ -54,10 +54,13 @@ class Event(DB.Model):
     Theme = Column(String(25), nullable=False)
 
     def toJson(self):
-        return {"Name": self.Name, "Theme": self.Theme}
+        return {"Event": self.Name, "Theme": self.Theme}
 
     def delete(self):
         DB.session.delete(self)
+        DB.session.commit()
+
+    def commit(self):
         DB.session.commit()
 
     @classmethod
