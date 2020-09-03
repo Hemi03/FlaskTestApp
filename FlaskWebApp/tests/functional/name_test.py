@@ -90,4 +90,3 @@ def testDeleteName_unknownName(test_client, init_database):
 def testDeleteName_noName(test_client, init_database):
     response = test_client.delete("/name/")
     assert response.status_code == 404
-    assert response.json == False

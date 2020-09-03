@@ -1,7 +1,7 @@
 from flask_restful import Api
 
-from .name import *
-from .event import *
+from .name_api import *
+from .event_api import *
 
 API = Api()
 
