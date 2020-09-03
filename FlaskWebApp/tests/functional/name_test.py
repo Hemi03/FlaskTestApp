@@ -18,7 +18,7 @@ def testAllName_empty(test_client):
     assert response.json == list()
 
 
-def testGetName_Successfull(test_client, init_database):
+def testGetName(test_client, init_database):
     target = {"Name": "Test1", "Event": "Event1"}
     response = test_client.get("/name/Test1")
     assert response.status_code == 200
@@ -78,6 +78,7 @@ def testDeleteName(test_client, init_database):
     response = test_client.delete("/name/Test1")
     assert response.status_code == 200
     assert response.json == True
+    assert Names.query.get("Test1") == None
 
 
 def testDeleteName_unknownName(test_client, init_database):
@@ -87,5 +88,6 @@ def testDeleteName_unknownName(test_client, init_database):
 
 
 def testDeleteName_noName(test_client, init_database):
-    response = test_client.delete("/name/Test3")
+    response = test_client.delete("/name/")
     assert response.status_code == 404
+    assert response.json == False

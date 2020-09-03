@@ -3,7 +3,7 @@ import pytest
 from .. import create_app
 from ..config import TestingConfig
 from ..db_Model import DB
-from ..db_Model.models import Names
+from ..db_Model.models import Names, Event
 
 
 @pytest.fixture(scope="module")
@@ -21,6 +21,9 @@ def init_database():
     # Insert user data
     name1 = Names.new_Names("Test1", "Event1")
     name2 = Names.new_Names("Test2", "Event2")
+    event1 = Event.new_Event("Event1", "Theme1")
+    event2 = Event.new_Event("Event2", "Theme2")
+    event3 = Event.new_Event("Event3", "Theme3")
 
     yield DB  # this is where the testing happens!
 
