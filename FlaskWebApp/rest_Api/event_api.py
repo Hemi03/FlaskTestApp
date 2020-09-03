@@ -32,12 +32,24 @@ class Rest_Event(Resource):
             logging.exception(err)
             return "Broken Json Value", 400
         theme = str(args['Theme'])
-        output = Event.query.get(theme)
+        output = Event.query.get(event)
         if not output:
-            output = Event.new_Names(event, theme)
+            output = Event.new_Event(event, theme)
         else:
             if theme == output.Theme:
                 return "cant change Event", 403
             output.Theme = theme
             output.commit()
         return output.toJson()
+
+    def put(self, *args, **kwargs):
+        """redirect to post
+        """
+        return self.post(*args, **kwargs)
+
+    def delete(self, event: str):
+        target = Event.query.get(event)
+        if not target:
+            return False, 404
+        target.delete()
+        return True
