@@ -1,6 +1,7 @@
 from json import dumps
 
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
 
 from ..db_Model import DB
 
@@ -9,7 +10,8 @@ class Names(DB.Model):
     """Name Database Table
     """
     Name = Column(String(50), primary_key=True)
-    Event = Column(String, nullable=False)
+    Event_ID = Column(String, nullable=False)
+    event = relationship("event", back_populates="namesUsed")
 
     def toJson(self):
         """return the Object in Json Format {"Name": name, "Event": event}
@@ -51,7 +53,8 @@ class Event(DB.Model):
     """Event Database Table
     """
     Name = Column(String(25), primary_key=True)
-    Theme = Column(String(25), nullable=False)
+    Theme = Column(String(25), ForeignKey(Names.Name), nullable=False)
+    namesUsed = relationship(Names, back_populates=Names.event)
 
     def toJson(self):
         return {"Event": self.Name, "Theme": self.Theme}
