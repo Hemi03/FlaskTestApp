@@ -1,10 +1,13 @@
 from flask import Flask, Blueprint
 from flask_restful import Api
+from flask_migrate import Migrate
 
 from .config import Config
 from .rest_Api import API
 from .db_Model import DB
 from .templates import ROUTES
+
+MIGRATE = Migrate()
 
 
 def create_app(test_config: object = None):
@@ -24,6 +27,7 @@ def create_app(test_config: object = None):
     app.register_blueprint(ROUTES)
     API.init_app(app)
     DB.init_app(app)
+    MIGRATE.init_app(app, DB)
     with app.app_context():
         DB.create_all()
     return app
